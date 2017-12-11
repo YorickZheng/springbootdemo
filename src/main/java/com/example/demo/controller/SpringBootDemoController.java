@@ -1,13 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.SpringBootEntity;
+import com.example.demo.entity.model.ApiOutput;
 import com.example.demo.repository.ISpringBootDemoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by zhengyilong on 2017/11/30.
@@ -21,7 +19,7 @@ public class SpringBootDemoController {
     ISpringBootDemoRepository iSpringBootDemoRepository;
 
     @RequestMapping("/get")
-    public String get(Long id){
+    public String get(@RequestParam Long id){
 
         SpringBootEntity springBootEntity = iSpringBootDemoRepository.findOne(id);
 
@@ -41,6 +39,19 @@ public class SpringBootDemoController {
             result = ex.getMessage();
         }
         return result;
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "getAll")
+    public ApiOutput getAll(){
+        ApiOutput apiOutput;
+        try{
+            apiOutput = new ApiOutput(iSpringBootDemoRepository.findAll());
+            apiOutput.setCode(0);
+        }catch (Exception ex){
+            ex.fillInStackTrace();
+            apiOutput = new ApiOutput(ex.getMessage());
+        }
+        return apiOutput;
     }
 
 
